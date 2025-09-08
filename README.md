@@ -42,4 +42,5 @@ make clean
 - If you encounter build errors about missing C headers, make sure you have Xcode Command Line Tools and required libraries (`libpng`, `zlib`) installed.
 
 ## License
-MIT
+Apache License - Version 2.0, January 2004
+http://www.apache.org/licenses/
