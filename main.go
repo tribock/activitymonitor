@@ -23,7 +23,7 @@ func keepOnMoving() {
 func moveBackAndForth(startX, startY int) (int, int) {
 	currentX, currentY := robotgo.Location()
 	if currentX != startX || currentY != startY {
-		log.Println("Mouse was moved manually. skipping this cycle.")
+		log.Println("Mouse was moved manually - skipping this cycle.")
 		return currentX, currentY
 	}
 	robotgo.Move(currentX+1, currentY+1)
