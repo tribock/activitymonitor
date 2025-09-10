@@ -12,7 +12,7 @@ ActivityMonitor is a Go program focused on monitoring user activity and collecti
 
 ## Requirements
 - Go 1.18 or newer
-- [robotgo](https://github.com/go-vgo/robotgo) library
+- [robotgo](https://github.com/go-vgo/robotgo#requirements) package requirements
 - On macOS: Accessibility permissions for your terminal (System Settings → Privacy & Security → Accessibility)
 
 ## Build
