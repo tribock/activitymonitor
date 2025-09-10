@@ -1,8 +1,11 @@
-module github.com/tribock/mousemover
+module github.com/tribock/activitymonitor
 
 go 1.24.3
 
-require github.com/go-vgo/robotgo v0.110.8
+require (
+	github.com/go-vgo/robotgo v0.110.8
+	github.com/rs/zerolog v1.34.0
+)
 
 require (
 	github.com/dblohm7/wingoes v0.0.0-20250822163801-6d8e6105c62d // indirect
@@ -12,6 +15,8 @@ require (
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/jezek/xgb v1.1.1 // indirect
 	github.com/lufia/plan9stats v0.0.0-20250827001030-24949be3fa54 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/otiai10/gosseract v2.2.1+incompatible // indirect
 	github.com/otiai10/mint v1.6.3 // indirect
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect

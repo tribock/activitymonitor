@@ -1,12 +1,12 @@
 GOPATH = $(shell go env GOPATH)
 build:
-	go build -o mousemover main.go
+	go build -o activitymonitor main.go
 
-run: build
-	./mousemover
+run: 
+	go run main.go
 
 clean:
-	rm -f mousemover
+	rm -f activitymonitor
 
 install: build
-	install -m 755 mousemover ${GOPATH}/bin/mousemover
+	install -m 755 activitymonitor ${GOPATH}/bin/activitymonitor
