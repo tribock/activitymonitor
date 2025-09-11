@@ -11,6 +11,7 @@ import (
 var (
 	stats   bool
 	timeout int
+	noMove  bool
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -36,6 +37,10 @@ activity and skips the automated movement for that cycle.`,
 			monitor = monitor.WithTimeout(time.Duration(timeout) * time.Second)
 		}
 
+		if noMove {
+			monitor = monitor.WithoutMoving()
+		}
+
 		// If no flags are set, use default behavior (stats enabled, 1 minute timeout)
 		if !stats && timeout == 0 {
 			monitor = monitor.WithStats().WithTimeout(1 * time.Minute)
@@ -59,8 +64,9 @@ func init() {
 	// Define flags
 	rootCmd.Flags().BoolVarP(&stats, "stats", "s", false, "Enable statistics collection and reporting")
 	rootCmd.Flags().IntVarP(&timeout, "timeout", "t", 0, "Set timeout interval in seconds (default: 60 seconds when no flags are provided)")
-
+	rootCmd.Flags().BoolVarP(&noMove, "no-move", "n", false, "Disable mouse movement, only monitor activity")
 	// Add help text for flags
 	rootCmd.Flags().Lookup("stats").Usage = "Enable statistics collection and reporting about user activity"
 	rootCmd.Flags().Lookup("timeout").Usage = "Set the interval between activity checks in seconds (e.g., -t 30 for 30 seconds)"
+	rootCmd.Flags().Lookup("no-move").Usage = "Disable mouse movement, only monitor activity"
 }

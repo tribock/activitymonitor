@@ -11,14 +11,16 @@ import (
 )
 
 type activityMonitor struct {
-	statsEnabled bool
-	stats        Stats
-	timeOut      time.Duration
+	statsEnabled  bool
+	movingEnabled bool
+	stats         Stats
+	timeOut       time.Duration
 }
 
 func NewActivityMonitor() *activityMonitor {
 	return &activityMonitor{
-		timeOut: time.Minute, // default value of 1 minute
+		movingEnabled: true,
+		timeOut:       time.Minute, // default value of 1 minute
 	}
 }
 
@@ -70,6 +72,12 @@ func (m *activityMonitor) WithStats() *activityMonitor {
 	return m
 }
 
+func (m *activityMonitor) WithoutMoving() *activityMonitor {
+	m.movingEnabled = false
+
+	return m
+}
+
 func (m *activityMonitor) WithTimeout(timeout time.Duration) *activityMonitor {
 	m.timeOut = timeout
 	return m
@@ -86,6 +94,9 @@ func (m *activityMonitor) moveBackAndForth(startX, startY int) (int, int) {
 	}
 	if m.statsEnabled {
 		m.handleIdle()
+	}
+	if !m.movingEnabled {
+		return currentX, currentY
 	}
 	robotgo.Move(currentX+1, currentY+1)
 	robotgo.Move(currentX, currentY)
