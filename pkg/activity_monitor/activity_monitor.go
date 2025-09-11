@@ -37,7 +37,9 @@ func (m *activityMonitor) KeepOnMoving() {
 	go func() {
 		<-c
 		os.Stdout.WriteString("\r") // Clear the ^C character
-		showStats(m.stats)
+		if m.statsEnabled {
+			showStats(m.stats)
+		}
 		os.Exit(0)
 	}()
 

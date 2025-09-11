@@ -23,15 +23,38 @@ make build
 
 ## Run
 
+**Default behavior (with stats and 1-minute timeout):**
 ```
 make run
 ```
 
 Or directly:
-
 ```
 go run main.go
 ```
+
+**With CLI options:**
+```
+# Run with stats enabled
+./activitymonitor --stats
+
+# Run with custom timeout (30 seconds)
+./activitymonitor --timeout 30
+
+# Run with both stats and custom timeout
+./activitymonitor --stats --timeout 45
+
+# Show help
+./activitymonitor --help
+```
+
+## CLI Options
+
+- `-s, --stats`: Enable statistics collection and reporting about user activity
+- `-t, --timeout <seconds>`: Set the interval between activity checks in seconds
+- `-h, --help`: Show help information
+
+**Note:** When no flags are provided, the program runs with stats enabled and a 1-minute timeout (default behavior).
 
 ## Install
 To install to your $GOPATH/bin directory:
