@@ -22,7 +22,7 @@ func main() {
 }
 
 func handleWindowContent(w fyne.Window) {
-	monitor := activitymonitor.NewActivityMonitor().WithStats().WithoutMoving()
+	monitor := activitymonitor.NewActivityMonitor().WithStats()
 
 	// Start the activity monitor in a separate goroutine
 	go monitor.KeepOnMoving()
