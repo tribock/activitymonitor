@@ -53,6 +53,10 @@ func (m *activityMonitor) KeepOnMoving() {
 	}
 }
 
+func (m *activityMonitor) GetStats() Stats {
+	return m.stats
+}
+
 func showStats(stats Stats) {
 	slog.Info("Stats",
 		"RunningTime", time.Since(stats.StartTime),
