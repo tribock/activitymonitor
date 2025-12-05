@@ -55,7 +55,6 @@ func (m *ActivityMonitor) KeepOnMoving() {
 // Use KeepOnMoving to handle interrupts
 func (m *ActivityMonitor) Run() {
 	currentX, currentY := robotgo.Location()
-	robotgo.MouseSleep = 10 // milliseconds
 	for {
 		currentX, currentY = m.moveBackAndForth(currentX, currentY)
 		time.Sleep(m.timeOut)
@@ -64,14 +63,13 @@ func (m *ActivityMonitor) Run() {
 
 func (m *ActivityMonitor) RunWithCancel(ctx context.Context) {
 	currentX, currentY := robotgo.Location()
-	robotgo.MouseSleep = 10 // milliseconds
 	for {
+		currentX, currentY = m.moveBackAndForth(currentX, currentY)
 		select {
+
 		case <-ctx.Done():
 			return
-		default:
-			currentX, currentY = m.moveBackAndForth(currentX, currentY)
-			time.Sleep(m.timeOut)
+		case <-time.After(m.timeOut):
 		}
 	}
 }

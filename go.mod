@@ -5,6 +5,7 @@ go 1.24.3
 require (
 	fyne.io/fyne/v2 v2.7.0
 	github.com/go-vgo/robotgo v0.110.8
+	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.10.1
 	golang.org/x/exp v0.0.0-20250819193227-8b4c13bb791b
 )
