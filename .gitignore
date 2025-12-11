@@ -1,2 +1,6 @@
 mousemover
 activitymonitor
+Makefile
+fyne-cross/
+activitymonitor*
+.DS_Store
