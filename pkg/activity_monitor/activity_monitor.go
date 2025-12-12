@@ -2,6 +2,7 @@ package activitymonitor
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"os"
 	"os/signal"
@@ -55,6 +56,7 @@ func (m *ActivityMonitor) KeepOnMoving() {
 // Use KeepOnMoving to handle interrupts
 func (m *ActivityMonitor) Run() {
 	currentX, currentY := robotgo.Location()
+	robotgo.MouseSleep = 10 // milliseconds
 	for {
 		currentX, currentY = m.moveBackAndForth(currentX, currentY)
 		time.Sleep(m.timeOut)
@@ -63,6 +65,7 @@ func (m *ActivityMonitor) Run() {
 
 func (m *ActivityMonitor) RunWithCancel(ctx context.Context) {
 	currentX, currentY := robotgo.Location()
+	robotgo.MouseSleep = 10 // milliseconds
 	for {
 		currentX, currentY = m.moveBackAndForth(currentX, currentY)
 		select {
@@ -140,6 +143,7 @@ func (m *ActivityMonitor) handleIdle() {
 
 		return
 	}
+	slog.Debug(fmt.Sprintf("Idle since %v", time.Since(m.stats.IdleSince)))
 	if time.Since(m.stats.IdleSince) < m.timeOut*5 {
 		return
 	}
