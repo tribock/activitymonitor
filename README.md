@@ -1,3 +1,5 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/tribock/activitymonitor)](https://goreportcard.com/report/github.com/tribock/activitymonitor)
+
 # ActivityMonitor
 
 ActivityMonitor is a Go program focused on monitoring user activity and collecting statistics about computer usage. It helps keep your screen active to avoid session timeouts or screen lock by periodically moving the mouse cursor by 1 pixel and then moving it back. If manual mouse movement is detected, the program records this as user activity and skips the automated movement for that cycle. This ensures accurate activity tracking while preventing unwanted sleep or lock events.
