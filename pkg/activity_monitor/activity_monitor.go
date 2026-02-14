@@ -1,6 +1,8 @@
 package activitymonitor
 
 import (
+	"context"
+	"fmt"
 	"log/slog"
 	"os"
 	"os/signal"
@@ -10,15 +12,15 @@ import (
 	"github.com/go-vgo/robotgo"
 )
 
-type activityMonitor struct {
+type ActivityMonitor struct {
 	statsEnabled  bool
 	movingEnabled bool
 	stats         Stats
 	timeOut       time.Duration
 }
 
-func NewActivityMonitor() *activityMonitor {
-	return &activityMonitor{
+func NewActivityMonitor() *ActivityMonitor {
+	return &ActivityMonitor{
 		movingEnabled: true,
 		timeOut:       time.Minute, // default value of 1 minute
 	}
@@ -31,7 +33,7 @@ type Stats struct {
 	IdleTime  time.Duration
 }
 
-func (m *activityMonitor) KeepOnMoving() {
+func (m *ActivityMonitor) KeepOnMoving() {
 
 	// Setup signal handling to intercept Ctrl+C and prevent ^C from being displayed
 	c := make(chan os.Signal, 1)
@@ -45,12 +47,38 @@ func (m *activityMonitor) KeepOnMoving() {
 		os.Exit(0)
 	}()
 
+	m.Run()
+
+}
+
+// Run the activity monitor loop
+// Blocking and not catching interrupts
+// Use KeepOnMoving to handle interrupts
+func (m *ActivityMonitor) Run() {
 	currentX, currentY := robotgo.Location()
 	robotgo.MouseSleep = 10 // milliseconds
 	for {
 		currentX, currentY = m.moveBackAndForth(currentX, currentY)
 		time.Sleep(m.timeOut)
 	}
+}
+
+func (m *ActivityMonitor) RunWithCancel(ctx context.Context) {
+	currentX, currentY := robotgo.Location()
+	robotgo.MouseSleep = 10 // milliseconds
+	for {
+		currentX, currentY = m.moveBackAndForth(currentX, currentY)
+		select {
+
+		case <-ctx.Done():
+			return
+		case <-time.After(m.timeOut):
+		}
+	}
+}
+
+func (m *ActivityMonitor) GetStats() Stats {
+	return m.stats
 }
 
 func showStats(stats Stats) {
@@ -61,7 +89,7 @@ func showStats(stats Stats) {
 	)
 }
 
-func (m *activityMonitor) WithStats() *activityMonitor {
+func (m *ActivityMonitor) WithStats() *ActivityMonitor {
 	m.statsEnabled = true
 
 	m.stats = Stats{
@@ -72,18 +100,18 @@ func (m *activityMonitor) WithStats() *activityMonitor {
 	return m
 }
 
-func (m *activityMonitor) WithoutMoving() *activityMonitor {
+func (m *ActivityMonitor) WithoutMoving() *ActivityMonitor {
 	m.movingEnabled = false
 
 	return m
 }
 
-func (m *activityMonitor) WithTimeout(timeout time.Duration) *activityMonitor {
+func (m *ActivityMonitor) WithTimeout(timeout time.Duration) *ActivityMonitor {
 	m.timeOut = timeout
 	return m
 }
 
-func (m *activityMonitor) moveBackAndForth(startX, startY int) (int, int) {
+func (m *ActivityMonitor) moveBackAndForth(startX, startY int) (int, int) {
 	currentX, currentY := robotgo.Location()
 	if currentX != startX || currentY != startY {
 		if m.statsEnabled {
@@ -108,20 +136,21 @@ func (m *activityMonitor) moveBackAndForth(startX, startY int) (int, int) {
 	return currentX, currentY
 }
 
-func (m *activityMonitor) handleIdle() {
+func (m *ActivityMonitor) handleIdle() {
 	if !m.stats.Idle {
 		m.stats.Idle = true
 		m.stats.IdleSince = time.Now()
 
 		return
 	}
+	slog.Debug(fmt.Sprintf("Idle since %v", time.Since(m.stats.IdleSince)))
 	if time.Since(m.stats.IdleSince) < m.timeOut*5 {
 		return
 	}
 	m.stats.IdleTime += m.timeOut
 }
 
-func (m *activityMonitor) handleActive() {
+func (m *ActivityMonitor) handleActive() {
 	if m.stats.Idle {
 		m.stats.Idle = false
 		m.stats.IdleSince = time.Time{}
